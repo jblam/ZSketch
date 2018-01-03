@@ -7,6 +7,7 @@
                 outcome = this.runTest();
             }
             catch (e) {
+                console.error(e);
                 outcome = e;
             }
             return { title: this.title, outcome, duration: performance.now() - startTime };

@@ -39,7 +39,7 @@
     <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
     <TypeScriptModuleKind>ES6</TypeScriptModuleKind>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
-    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
     <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
     <TypeScriptOutFile />
     <TypeScriptOutDir />
@@ -100,9 +100,13 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="geom.ts" />
+    <TypeScriptCompile Include="Implementations\line.ts" />
+    <TypeScriptCompile Include="Implementations\point.ts" />
     <TypeScriptCompile Include="Testing\demo-test.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="Testing\geom-test.ts" />
     <TypeScriptCompile Include="Testing\runner.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
