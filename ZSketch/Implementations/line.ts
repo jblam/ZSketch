@@ -1,10 +1,10 @@
-﻿namespace Geometry.Line {
+﻿namespace Geometry {
     interface LineBase extends Geometry.Definition {
         kind: "line";
     }
     /** defines a line as ax + by = c */
-    export interface Element extends LineBase {
-        definition: Definition;
+    export class Line extends BaseSketchElement<LineDefinition> {
+        dependencies: ReadonlyArray<SketchElement>;
         /** the x-coefficient */
         a: number;
         /** the y-coefficient */
@@ -24,14 +24,14 @@
         line: Reference;
         offset: number;
     }
-    export type Definition = LineFromOffset | LineFromPoints;
+    export type LineDefinition = LineFromOffset | LineFromPoints;
     export function IsLine(def: Definition): def is Definition {
         return def.kind == "line";
     }
-    export function Inflate(def: Definition, map: GeometryMap): Element {
+    function Inflate(def: Definition, map: GeometryMap): SketchElement {
         throw new Error("Not implemented");
     }
 
-    export const parser: Parser<Definition, Element> = { matches: IsLine, inflate: Inflate };
+    const parser: Parser<Definition, SketchElement> = { matches: IsLine, inflate: Inflate };
     addParser(parser);
 }

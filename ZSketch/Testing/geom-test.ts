@@ -5,30 +5,32 @@
 
 
 
-    type GeometryElement = Point.Element | Line.Element;
-    type GeometryDefinition = Point.Definition | Line.Definition;
+    type GeometryElement = Point | Line;
+    type GeometryDefinition = PointDefinition | LineDefinition;
     var geometry: GeometryDefinition[] = [
         {
             id: "zsk-1",
             kind: "point",
+            method: "coordinates",
             x: 1,
             y: 1,
         },
         {
             id: "zsk-2",
             kind: "point",
+            method: "coordinates",
             x: 2,
             y: 2
         },
-        {
-            id: "zsk-3",
-            kind: "line",
-            point1: "zsk-1",
-            point2: "zsk-2"
-        },
+        //{
+        //    id: "zsk-3",
+        //    kind: "line",
+        //    point1: "zsk-1",
+        //    point2: "zsk-2"
+        //},
     ];
 
-    type TestPredicate = (sk: { def: SketchDefinition, arr: Element[], map: GeometryMap }) => Testing.TestOutcome;
+    type TestPredicate = (sk: { def: SketchDefinition, arr: SketchElement[], map: GeometryMap }) => Testing.TestOutcome;
     class GeomTest extends Testing.Test {
         
         constructor(def: SketchDefinition, predicate: TestPredicate) {
