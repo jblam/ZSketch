@@ -22,6 +22,24 @@
         abstract readonly dependencies: ReadonlyArray<SketchElement>;
     }
 
+    export class Invalid extends BaseSketchElement<Definition> {
+        constructor(def: Definition, ...dependencies: SketchElement[]) {
+            super(def);
+            this.dependencies = dependencies;
+        }
+        dependencies: ReadonlyArray<SketchElement>;
+    }
+    export function createInvalidReference(id: string) {
+        return new Invalid({ id, kind: "invalid" });
+    }
+    export function isValid(el: SketchElement) { return !(el instanceof Invalid); }
+
+    // TODO: can Typescript auto-generate input validation?
+    // TODO: the Invalid Definition geometry
+    // TODO: the Invalid Reference geometry
+
+    // TODO: can you reflect on Typescript types?
+
     export interface Parser<TDefinition extends Definition, TElement extends SketchElement> {
         matches: (geom: Definition) => boolean;
         inflate: (geom: TDefinition, map: GeometryMap) => TElement;
@@ -61,11 +79,9 @@
                     return parser.inflate(def, map);
                 }
             }
+            return new Invalid(def);
         }
         let output = parse();
-        if (!output) {
-            throw new Error(`Could not parse defintion of kind ${def.kind}`);
-        }
         map[output.id] = output;
         return output;
     }

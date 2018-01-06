@@ -38,8 +38,10 @@
     function Inflate(def: PointDefinition, map: GeometryMap): SketchElement {
         if (def.method == "coordinates") {
             return new CoordinatesPoint(def);
+        } else if (def.method == "intersection") {
+            throw new Error("Intersection not implemented");
         }
-        throw new Error(`Method ${def.method} not implemented`);
+        return new Invalid(def);
     }
 
     const parser: Parser<Definition, SketchElement> = { matches: IsPoint, inflate: Inflate };
