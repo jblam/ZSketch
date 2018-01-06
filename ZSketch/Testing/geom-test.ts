@@ -1,12 +1,10 @@
 ﻿namespace Geometry.Tests {
-    //interface Dummy1 : GeometryBase
-
-
-
-
-
     type GeometryElement = Point | Line;
-    type GeometryDefinition = PointDefinition | LineDefinition;
+    interface ExplicitInvalidDef {
+        id: string,
+        kind: "invalid"
+    }
+    export type GeometryDefinition = PointDefinition | LineDefinition | ExplicitInvalidDef;
     var geometry: GeometryDefinition[] = [
         {
             id: "zsk-1",
@@ -29,11 +27,13 @@
         //    point2: "zsk-2"
         //},
     ];
-
+    interface ExplicitSketchDefinition {
+        geometry: GeometryDefinition[]
+    }
     type TestPredicate = (sk: { def: SketchDefinition, arr: SketchElement[], map: GeometryMap }) => Testing.TestOutcome;
-    class GeomTest extends Testing.Test {
+    export class GeomTest extends Testing.Test {
 
-        constructor(def: SketchDefinition, predicate: TestPredicate, title: string, debugOnRun?: boolean) {
+        constructor(def: ExplicitSketchDefinition, predicate: TestPredicate, title: string, debugOnRun?: boolean) {
             super();
             this.def = def;
             this.predicate = predicate;
@@ -59,7 +59,7 @@
         new GeomTest(
             {
                 geometry: [
-                    { kind: "beer", id: "invalid-refernece" }
+                    { kind: "invalid", id: "invalid-refernece" }
                 ]
             },
             sk => !isValid(sk.arr[0]) ? "pass" : { outcome: "fail", reason: "Bad definition unexpectedly valid" },
