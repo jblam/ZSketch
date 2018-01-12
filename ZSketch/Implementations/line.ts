@@ -31,6 +31,10 @@
         start: number;
         /** the end point of the line, or Infinity if the line has no end point */
         end: number;
+
+        public static areParallel(l1: Line, l2: Line) {
+            return Math.abs(Math.abs(l1.a) - Math.abs(l2.a)) < Geometry.tolerance;
+        }
     }
     interface LineFromAlgebra extends LineBase {
         method: "algebra",
@@ -56,7 +60,7 @@
     export function IsLineDefinition(def: Definition): def is LineBase {
         return def.kind == "line";
     }
-    function isLine(el: SketchElement): el is Line {
+    export function isLine(el: SketchElement): el is Line {
         return el.kind == "line";
     }
     function Inflate(def: LineDefinition, map: GeometryMap): SketchElement {
