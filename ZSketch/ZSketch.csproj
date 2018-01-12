@@ -107,6 +107,7 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="Testing\geom-test.ts" />
+    <TypeScriptCompile Include="Testing\line.test.ts" />
     <TypeScriptCompile Include="Testing\runner.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

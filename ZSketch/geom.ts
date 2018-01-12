@@ -1,5 +1,7 @@
 ﻿namespace Geometry {
-
+    // TODO: contextual tolerance depending on the precision of definitions
+    /** defines the numerical tolerance within which two floating-point values are considered equal */
+    export const tolerance = 1e-6;
     export interface Definition {
         id: string;
         kind: string;
