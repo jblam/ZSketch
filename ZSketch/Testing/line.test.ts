@@ -1,4 +1,10 @@
 ﻿namespace Geometry.Tests {
+    function isLineAnd(el: SketchElement, f: ((l: Line) => Testing.TestOutcome)): Testing.TestOutcome {
+        if (!el) return { outcome: "fail", reason: "Expected element was not found" };
+        return isValid(el) && isLine(el)
+            ? f(el)
+            : { outcome: "fail", reason: `Element "${el.id}" was expected to be a line, but was "${el.kind}"` };
+    }
     Testing.addTest(
         new GeomTest(
             {
@@ -13,7 +19,7 @@
                     }
                 ]
             },
-            sk => (sk.map["l1"].kind == "line" ? "pass" : { outcome: "fail", reason: "line not parsed" }),
+            sk => isLineAnd(sk.map["l1"], l => "pass"),
             "Parse line from algebra"
         ),
         new GeomTest({
@@ -26,7 +32,7 @@
                 c: 0
             }]
         },
-            sk => (sk.map["l1"].kind == "line" ? "pass" : { outcome: "fail", reason: "line not parsed" }),
+            sk => isLineAnd(sk.map["l1"], l => "pass"),
             "Parse line from non-normalised algebra"
         ),
         new GeomTest({ geometry: [
@@ -45,11 +51,9 @@
             }
         ]
         },
-            sk => sk.map["l2"].kind == "line" && Geometry.isValid(sk.map["l2"])
-                ? (l => l.c == 1 && l.b == 1)(<Line>sk.map["l2"])
-                    ? "pass"
-                    : { outcome: "fail", reason: "Unexpected offset value" }
-                : { outcome: "fail", reason: "Offset line not generated" },
+            sk => isLineAnd(sk.map["l2"], l => [l.a, l.b, l.c].every((u, i) => u == [0, 1, 1][i])
+                ? "pass"
+                : { outcome: "fail", reason: `Expected [0, 1, 1], found [${[l.a, l.b, l.c]}]` }),
             "Line from offset"
         )
     );
