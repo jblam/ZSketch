@@ -45,7 +45,11 @@
             }
         ]
         },
-            sk => sk.map["l2"].kind == "line" && Geometry.isValid(sk.map["l2"]) ? "pass" : { outcome: "fail", reason: "Offset line not generated" },
+            sk => sk.map["l2"].kind == "line" && Geometry.isValid(sk.map["l2"])
+                ? (l => l.c == 1 && l.b == 1)(<Line>sk.map["l2"])
+                    ? "pass"
+                    : { outcome: "fail", reason: "Unexpected offset value" }
+                : { outcome: "fail", reason: "Offset line not generated" },
             "Line from offset"
         )
     );

@@ -53,8 +53,11 @@
     export type LineDefinition = LineFromOffset
         | LineFromPoints
         | LineFromAlgebra;
-    export function IsLine(def: Definition): def is Definition {
+    export function IsLineDefinition(def: Definition): def is LineBase {
         return def.kind == "line";
+    }
+    function isLine(el: SketchElement): el is Line {
+        return el.kind == "line";
     }
     function Inflate(def: LineDefinition, map: GeometryMap): SketchElement {
         if (def.method == "algebra") {
@@ -64,9 +67,18 @@
             }
             return new Line(def, [], def.a * factor, def.b * factor, def.c, def.start, def.end);
         }
+        if (def.method == "offset") {
+            let basis = map[def.line];
+            if (isLine(basis)) {
+                return new Line(def, [basis], basis.a, basis.b, basis.c + def.offset, basis.start, basis.end);
+            }
+            else {
+                return new Invalid(def, basis);
+            }
+        }
         return new Invalid(def);
     }
 
-    const parser: Parser<Definition, SketchElement> = { matches: IsLine, inflate: Inflate };
+    const parser: Parser<Definition, SketchElement> = { matches: IsLineDefinition, inflate: Inflate };
     addParser(parser);
 }
