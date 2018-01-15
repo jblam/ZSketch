@@ -19,7 +19,7 @@
                     }
                 ]
             },
-            sk => isLineAnd(sk.map["l1"], l => "pass"),
+            sk => IsTAnd(sk.map["l1"], isLine, Testing.pass),
             "Parse line from algebra"
         ),
         new GeomTest({
@@ -32,7 +32,7 @@
                 c: 0
             }]
         },
-            sk => isLineAnd(sk.map["l1"], l => "pass"),
+            sk => isLineOf(sk.map["l1"], 0, 1, 0, -Infinity, Infinity),
             "Parse line from non-normalised algebra"
         ),
         new GeomTest({ geometry: [
@@ -51,9 +51,7 @@
             }
         ]
         },
-            sk => isLineAnd(sk.map["l2"], l => [l.a, l.b, l.c].every((u, i) => u == [0, 1, 1][i])
-                ? "pass"
-                : { outcome: "fail", reason: `Expected [0, 1, 1], found [${[l.a, l.b, l.c]}]` }),
+            sk => isLineOf(sk.map["l2"], 0, 1, 1, -Infinity, Infinity),
             "Line from offset"
         )
     );

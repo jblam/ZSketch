@@ -1,15 +1,15 @@
 ﻿namespace Geometry.Tests {
-    function isPointAt(el: SketchElement, x: number, y: number): Testing.TestOutcome {
+    function isPointAt(el: SketchElement, x: number, y: number): Testing.TestResult {
         if (isValid(el) && IsPoint(el)) {
             if (el.x != x) {
-                return { outcome: "fail", reason: `X coordinate was ${x}; found ${el.x}` };
+                return Testing.fail(`X coordinate was ${x}; found ${el.x}`, el);
             }
             if (el.y != y) {
-                return { outcome: "fail", reason: `Y coordinate was ${y}; found ${el.y}` };
+                return Testing.fail(`Y coordinate was ${y}; found ${el.y}`, el);
             }
-            return "pass";
+            return Testing.pass(el);
         }
-        return { outcome: "fail", reason: `Element "${el.id}" of type "${el.kind}" is not a valid point` };
+        return Testing.fail(`Element "${el.id}" of type "${el.kind}" is not a valid point`, el);
     }
     function al(n: any, a: number, b: number, c: number): LineDefinition {
         return { id: `line${n}`, kind: "line", method: "algebra", a, b, c };

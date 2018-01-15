@@ -30,7 +30,8 @@
     interface ExplicitSketchDefinition {
         geometry: GeometryDefinition[]
     }
-    type TestPredicate = (sk: { def: SketchDefinition, arr: SketchElement[], map: GeometryMap }) => Testing.TestOutcome;
+    type TestPredicate = (sk: { def: SketchDefinition, arr: SketchElement[], map: GeometryMap }) => Testing.TestResult;
+
     export class GeomTest extends Testing.Test {
 
         constructor(def: ExplicitSketchDefinition, predicate: TestPredicate, title: string, debugOnRun?: boolean) {
@@ -42,7 +43,7 @@
         }
         def: SketchDefinition;
         predicate: TestPredicate;
-        runTest(): Testing.TestOutcome {
+        runTest(): Testing.TestResult {
             if (this.debugOnRun) debugger;
             return this.predicate(InflateSketch(this.def));
         }
@@ -50,11 +51,28 @@
         debugOnRun: boolean;
     }
 
+    export function pass(sk: SketchElement) { return Testing.pass(sk); }
 
+    export function IsTAnd<T extends SketchElement>(
+        el: SketchElement,
+        matches: (el: SketchElement) => el is T,
+        predicate: (t: T) => Testing.TestResult): Testing.TestResult {
+        if (!isValid(el)) return Testing.fail(`Element "${el.id}" expected to be valid, but was not`, el);
+        if (!matches(el)) return Testing.fail(`Element "${el.id}" was of unexpected type "${el.kind}"`, el);
+        return predicate(el);
+    }
+    export function IsT<T extends SketchElement>(
+        el: SketchElement,
+        matches: (el: SketchElement) => el is T): Testing.TestResult {
+        if (!isValid(el)) return Testing.fail(`Element "${el.id}" expected to be valid, but was not`, el);
+        if (!matches(el)) return Testing.fail(`Element "${el.id}" was of unexpected type "${el.kind}"`, el);
+        return Testing.pass(el);
+    }
+    
     Testing.addTest(
         new GeomTest(
             { geometry: [] },
-            sk => sk.arr.length == 0 ? "pass" : { outcome: "fail", reason: "Unexpected geometry emitted" },
+            sk => sk.arr.length == 0 ? Testing.pass(sk) : Testing.fail("Unexpected geometry emitted", sk),
             "Empty geometry"),
         new GeomTest(
             {
@@ -62,7 +80,7 @@
                     { kind: "invalid", id: "invalid-refernece" }
                 ]
             },
-            sk => !isValid(sk.arr[0]) ? "pass" : { outcome: "fail", reason: "Bad definition unexpectedly valid" },
+            sk => !isValid(sk.arr[0]) ? Testing.pass(sk) : Testing.fail("Bad definition unexpectedly valid", sk),
             "Invalid definition"
         )
     );
