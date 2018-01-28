@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="runner.js"></script>
+    <script src="demo-test.js"></script>
+    <style>
+        .pass .outcome {
+            color: green;
+        }
+        .fail .outcome, .error .outcome {
+            color: red;
+        }
+        .skip .outcome {
+            color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>testing woo</h1>
+    <template id="test-result">
+        <tr>
+            <td class="description"></td>
+            <td class="outcome"></td>
+            <td class="reason"></td>
+            <td class="duration"></td>
+        </tr>
+    </template>
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Outcome</th>
+                <th>Reason</th>
+                <th>Duration</th>
+            </tr>
+        </thead>
+        <tbody id="test-results-body"></tbody>
+    </table>
+</body>
+</html>
