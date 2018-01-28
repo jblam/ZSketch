@@ -3,15 +3,23 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <script src="runner.js"></script>
-    <script src="demo-test.js"></script>
+    <script src="/Testing/runner.js"></script>
+    <script src="/Testing/assert.js"></script>
+    <script src="/geom.js"></script>
+    <script src="/Implementations/point.js"></script>
+    <script src="/Implementations/line.js"></script>
+    <script src="/Testing/geom-test.js"></script>
+    <script src="/Testing/point.test.js"></script>
+    <script src="/Testing/line.test.js"></script>
     <style>
         .pass .outcome {
             color: green;
         }
+
         .fail .outcome, .error .outcome {
             color: red;
         }
+
         .skip .outcome {
             color: yellow;
         }
@@ -23,6 +31,7 @@
         <tr>
             <td class="description"></td>
             <td class="outcome"></td>
+            <td class="inspect"><button>i</button></td>
             <td class="reason"></td>
             <td class="duration"></td>
         </tr>
@@ -31,7 +40,7 @@
         <thead>
             <tr>
                 <th>Description</th>
-                <th>Outcome</th>
+                <th colspan="2">Outcome</th>
                 <th>Reason</th>
                 <th>Duration</th>
             </tr>

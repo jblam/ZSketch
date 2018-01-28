@@ -1,32 +1,38 @@
 ﻿namespace Testing {
     export abstract class Test {
-        public getResult(): TestResult {
+        public getResult(): TestOutput {
             const startTime = performance.now();
-            let outcome: TestOutcome | Error;
+            let outcome: TestResult | Error;
             try {
                 outcome = this.runTest();
             }
             catch (e) {
+                console.error(e);
                 outcome = e;
             }
             return { title: this.title, outcome, duration: performance.now() - startTime };
         }
-        abstract runTest(): TestOutcome;
+        abstract runTest(): TestResult;
         abstract readonly title: string;
     }
 
-    interface TestResult {
+    interface TestOutput {
         title: string;
-        outcome: TestOutcome | Error;
+        outcome: TestResult | Error;
         duration: number;
     }
 
-    type FailOrSkip = "fail" | "skip";
-    export type TestOutcome = "pass" | { outcome: FailOrSkip, reason: string } | Error;
+    interface PassResult { outcome: "pass", context: object };
+    interface FailResult { outcome: "fail", reason: string, context: object }
+    interface SkipResult { outcome: "skip", reason: string }
+    export type TestResult = PassResult | FailResult | SkipResult | Error;
+    export function pass(context: object): TestResult { return { outcome: "pass", context } };
+    export function fail(reason: string, context: object): TestResult { return { outcome: "fail", reason, context }; }
+    export function skip(reason: string): TestResult { return { outcome: "skip", reason }; }
 
-    export const results: TestResult[] = [];
+    export const results: TestOutput[] = [];
     function isDocumentReady() { return document.readyState === "complete"; }
-    let toRender: TestResult[] | null = isDocumentReady() ? null : [];
+    let toRender: TestOutput[] | null = isDocumentReady() ? null : [];
     document.addEventListener("readystatechange", ev => {
         if (!isDocumentReady()) {
             return;
@@ -48,9 +54,9 @@
         }
     }
 
-    function render(result: TestResult) {
+    function render(result: TestOutput) {
         let template = <HTMLTemplateElement>document.getElementById("test-result");
-        var content = template.content;
+        let content = template.content;
         content.querySelector(".description").textContent = result.title;
         content.querySelector(".duration").textContent = result.duration.toFixed(2);
         function setOutcome(outcome: string, reason: string) {
@@ -58,16 +64,21 @@
             content.querySelector(".reason").textContent = reason;
             content.firstElementChild.className = outcome;
         }
-        if (result.outcome == "pass") {
-            setOutcome(result.outcome, "");
-        }
-        else if (result.outcome instanceof Error) {
+        let resultContext: object = null;
+        if (result.outcome instanceof Error) {
             setOutcome("error", result.outcome.message);
         }
         else {
-            setOutcome(result.outcome.outcome, result.outcome.reason);
+            setOutcome(result.outcome.outcome, result.outcome.outcome == "pass" ? "" : result.outcome.reason);
+            if (result.outcome.outcome !== "skip") {
+                resultContext = result.outcome.context;
+            }
         }
 
-        document.getElementById("test-results-body").appendChild(document.importNode(content, true));
+        let parent = document.getElementById("test-results-body");
+        let instance = parent.appendChild(document.importNode(content, true));
+        let button = <HTMLElement>parent.children[parent.children.length - 1].querySelector(".inspect button");
+        if (button) button.onclick = () => console.log(resultContext);
+        else console.log("no button");
     }
 }
