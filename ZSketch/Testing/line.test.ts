@@ -1,9 +1,9 @@
 ﻿namespace Geometry.Tests {
-    function isLineAnd(el: SketchElement, f: ((l: Line) => Testing.TestOutcome)): Testing.TestOutcome {
-        if (!el) return { outcome: "fail", reason: "Expected element was not found" };
+    function isLineAnd(el: SketchElement, f: ((l: Line) => Testing.TestResult)): Testing.TestResult {
+        if (!el) return { outcome: "fail", reason: "Expected element was not found", context: el };
         return isValid(el) && isLine(el)
             ? f(el)
-            : { outcome: "fail", reason: `Element "${el.id}" was expected to be a line, but was "${el.kind}"` };
+            : { outcome: "fail", reason: `Element "${el.id}" was expected to be a line, but was "${el.kind}"`, context: el };
     }
     Testing.addTest(
         new GeomTest(
