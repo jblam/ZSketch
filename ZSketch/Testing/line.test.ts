@@ -12,9 +12,9 @@
                     {
                         id: "l1",
                         kind: "line",
-                        method: "algebra",
-                        a: 0,
-                        b: 1,
+                        method: "vector",
+                        ex: 0,
+                        ey: 1,
                         c: 0
                     }
                 ]
@@ -26,33 +26,14 @@
             geometry: [{
                 id: "l1",
                 kind: "line",
-                method: "algebra",
-                a: 0,
-                b: 2,
+                method: "vector",
+                ex: 0,
+                ey: 2,
                 c: 0
             }]
         },
-            sk => isLineOf(sk.map["l1"], 0, 1, 0, -Infinity, Infinity),
+            sk => isLineAnd(sk.map["l1"], l => Testing.Assert.sequenceEqual(l.e, [0, 1], true) || { outcome: "pass", context: l }),
             "Parse line from non-normalised algebra"
         ),
-        new GeomTest({ geometry: [
-            {
-                id: "l1",
-                kind: "line",
-                method: "algebra",
-                a: 0, b: 1, c: 0
-            },
-            {
-                id: "l2",
-                kind: "line",
-                method: "offset",
-                line: "l1",
-                offset: 1
-            }
-        ]
-        },
-            sk => isLineOf(sk.map["l2"], 0, 1, 1, -Infinity, Infinity),
-            "Line from offset"
-        )
     );
 }

@@ -11,8 +11,8 @@
         }
         return Testing.fail(`Element "${el.id}" of type "${el.kind}" is not a valid point`, el);
     }
-    function al(n: any, a: number, b: number, c: number): LineDefinition {
-        return { id: `line${n}`, kind: "line", method: "algebra", a, b, c };
+    function al(n: any, ex: number, ey: number, c: number): LineDefinition {
+        return { id: `line${n}`, kind: "line", method: "vector", ex, ey, c };
     }
     Testing.addTest(
         new GeomTest({
